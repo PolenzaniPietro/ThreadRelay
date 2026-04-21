@@ -8,6 +8,24 @@ package threadrelay;
  *
  * @author polenzani.pietro
  */
-public class Corridore {
+public class Corridore extends Thread{
+    private Staffetta staffetta = new Staffetta();
+    private int distanza = 0;
     
+    public void corri(){
+        if(distanza<99){
+            this.distanza++;
+        }
+        
+    }
+    public void Run(){
+        try{
+            if(!this.staffetta.isOccupato()){
+            this.corri();
+            Thread.sleep(90);
+            }
+        }
+        catch(Exception e){
+        }
+    }
 }

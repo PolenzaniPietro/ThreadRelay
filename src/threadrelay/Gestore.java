@@ -8,12 +8,6 @@ package threadrelay;
  *
  * @author polenzani.pietro
  */
-public class Staffetta {
-    private boolean occupato;
-
-    public boolean isOccupato() {
-        return occupato;
-    }
-    
+public class Gestore {
     
 }
