@@ -9,8 +9,11 @@ package threadrelay;
  * @author polenzani.pietro
  */
 public class Corridore extends Thread{
-    private Staffetta staffetta = new Staffetta();
     private int distanza = 0;
+    private Staffetta staffetta;
+    public Corridore(Staffetta s) {
+        this.staffetta=s;
+    }
     
     public void corri(){
         if(distanza<99){
