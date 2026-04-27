@@ -8,27 +8,41 @@ package threadrelay;
  *
  * @author polenzani.pietro
  */
-public class Corridore extends Thread{
+public class Corridore extends Thread {
+
     private int distanza = 0;
+    private String nome;
     private Staffetta staffetta;
+    private Corridore precedente;
+
     public Corridore(Staffetta s) {
-        this.staffetta=s;
+        this.staffetta = s;
     }
-    
-    public void corri(){
-        if(distanza<99){
-            this.distanza++;
+
+    public Corridore(String nome, Corridore precedente) {
+        this.nome = nome;
+        this.precedente = precedente;
+    }
+
+    private void corri() throws InterruptedException {
+        for (int i = 0; i <= 100; i += 1) {
+            System.out.println(nome + " -> " + i + " metri");
+            Thread.sleep(80);
         }
-        
     }
-    public void Run(){
-        try{
-            if(!this.staffetta.isOccupato()){
-            this.corri();
-            Thread.sleep(90);
+
+    @Override
+    public void run() {
+        try {
+            if (precedente != null) {
+                precedente.join();
             }
-        }
-        catch(Exception e){
+
+            System.out.println(nome + " pronto"); 
+            corri();
+
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
