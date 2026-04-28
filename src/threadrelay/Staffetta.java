@@ -9,32 +9,38 @@ package threadrelay;
  * @author polenzani.pietro
  */
 public class Staffetta {
-    private boolean occupato;
 
-    public boolean isOccupato() {
-        return occupato;
-    }
-    
-    private Corridore[] corridori;
+    private static final int RUNNERS = 4;
 
-    public Staffetta() {
-        corridori = new Corridore[4];
-        corridori[0] = new Corridore("Corridore 1", null);
-        corridori[1] = new Corridore("Corridore 2", corridori[0]);
-        corridori[2] = new Corridore("Corridore 3", corridori[1]);
-        corridori[3] = new Corridore("Corridore 4", corridori[2]);
-    }
+    private final boolean[] via = new boolean[RUNNERS];
+    private final Corridore[] corridori = new Corridore[RUNNERS];
+    private final Object lock = new Object();
 
     public void startRace() {
-    for (Corridore c : corridori) {
-        c.start();
-    }
-    for (Corridore c : corridori) {
-        try {
-            c.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        System.out.println("Partenza staffetta");
+        for (int i = 0; i < RUNNERS; i++) {
+            via[i] = false;
+            corridori[i] = new Corridore("Runner " + (i + 1), i, via, lock);
         }
+
+        synchronized (lock) {
+            via[0] = true;
+            lock.notifyAll();
+        }
+        
+        for (Corridore c : corridori) {
+            c.start();
+        }
+        
+        for (Corridore c : corridori) {
+            try {
+                c.join();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                return;
+            }
+        }
+
+        System.out.println("Staffetta completata");
     }
-}
 }
