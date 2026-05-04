@@ -10,17 +10,31 @@ package threadrelay;
  */
 public class Staffetta {
 
-    private static final int RUNNERS = 4;
 
-    private final boolean[] via = new boolean[RUNNERS];
-    private final Corridore[] corridori = new Corridore[RUNNERS];
+    private final boolean[] via = new boolean[4];
+    private final boolean[] pausa = new boolean[1];
+    private final Corridore[] corridori = new Corridore[4];
     private final Object lock = new Object();
+
+    public void pauseRace() {
+        synchronized (lock) {
+            pausa[0] = true;
+        }
+    }
+
+    public void resumeRace() {
+        synchronized (lock) {
+            pausa[0] = false;
+            lock.notifyAll();
+        }
+    }
 
     public void startRace() {
         System.out.println("Partenza staffetta");
-        for (int i = 0; i < RUNNERS; i++) {
+        pausa[0] = false;
+        for (int i = 0; i < 4; i++) {
             via[i] = false;
-            corridori[i] = new Corridore("Runner " + (i + 1), i, via, lock);
+            corridori[i] = new Corridore("Runner " + (i + 1), i, via, pausa, lock);
         }
 
         synchronized (lock) {

@@ -14,8 +14,10 @@ public class ThreadRelay {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Staffetta staffetta = new Staffetta();
-        staffetta.startRace();
+        /* Staffetta staffetta = new Staffetta();
+         staffetta.startRace();*/
+       Form f = new Form();
+       f.setVisible(true);
     }
     
 }

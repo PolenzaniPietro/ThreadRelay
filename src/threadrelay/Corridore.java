@@ -10,17 +10,18 @@ package threadrelay;
  */
 public class Corridore extends Thread {
 
-    private String nome;
-    private int index;
-    private boolean[] via;
-    private Object lock;
+    private final String nome;
+    private final int index;
+    private final boolean[] via;
+    private final boolean[] pausa;
+    private final Object lock;
 
-    public Corridore(String nome, int index, boolean[] via, Object lock) {
+    public Corridore(String nome, int index, boolean[] via, boolean[] pausa, Object lock) {
         this.nome = nome;
         this.index = index;
         this.via = via;
+        this.pausa = pausa;
         this.lock = lock;
-        this.nome=nome;
     }
 
     @Override
@@ -32,6 +33,11 @@ public class Corridore extends Thread {
                 }
             }
             for (int i = 0; i <= 99; i++) {
+                synchronized (lock) {
+                    while (pausa[0]) {
+                        lock.wait();
+                    }
+                }
                 System.out.println(nome + " -> " + i);
                 if (i == 90) {
                     synchronized (lock) {
